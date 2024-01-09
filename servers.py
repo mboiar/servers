@@ -31,7 +31,7 @@ class ServerError(Exception):
     pass  
 
 
-class TooManyProductsFoundError:
+class TooManyProductsFoundError(ServerError):
     # Reprezentuje wyjątek związany ze znalezieniem zbyt dużej liczby produktów.
     pass
     

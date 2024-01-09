@@ -1,7 +1,7 @@
 import unittest
 from collections import Counter
 
-from servers import ListServer, Product, Client, MapServer
+from servers import ListServer, Product, Client, MapServer, ServerError
 
 server_types = (ListServer, MapServer)
 
@@ -37,7 +37,20 @@ class ServerTest(unittest.TestCase):
             server = server_type(products)
             entries = server.get_entries(2)
             self.assertEqual(Counter([products[2], products[1]]), Counter(entries))
-
+    
+    def test_raises_when_max_number_of_entries_exceeded(self):
+        products = [Product('PR12', 5), Product('PP234', 6), Product('PP235', 1), Product('PK235', 1)]
+        for server_type in server_types:
+            server = server_type(products)
+            with self.assertRaises(ServerError):
+                entries = server.get_entries(2)
+    
+    def test_return_empty_list_with_no_entries(self):
+        products = [Product('P12', 5)]
+        for server_type in server_types:
+            server = server_type(products)
+            entries = server.get_entries(2)
+            self.assertEqual([], entries)
 
 class ClientTest(unittest.TestCase):
     def test_total_price_for_normal_execution(self):
