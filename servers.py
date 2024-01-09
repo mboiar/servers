@@ -8,9 +8,9 @@ from abc import abstractmethod, ABC
 
     
 class Product:
-    def __init__(self, name: str, price: float) -> None:
+    def __init__(self, name: str, price: Union[float, int]) -> None:
         # Check the types
-        if not (isinstance(name, str) and isinstance(price, float)):
+        if not (isinstance(name, str) and isinstance(price, (int, float))):
             raise ValueError("The name or price is wrong type!")
         elif not re.findall(r'^[A-Za-z]+\d+$', name):
             raise ValueError("The name have bad pattern!")
