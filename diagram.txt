@@ -1,0 +1,37 @@
+@startuml
+class Product {
+  + Product (name: string, price: float): none
+  + eq (other: Product): bool
+  + hash (): int
+  - name_: string
+  - price_: float
+}
+
+class Client {
+  + Client (server: Server): none
+  + get_total_pice (n: int): float
+  - server: Server
+}
+
+class Server {
+  + {abstract} Server (): none
+  + {abstract} get_entries (n: int): List[Product]
+  + match_product_name (product: Product, n: int): List[Product]
+  + has_too_many_products (entries: List[Product]): bool
+}
+
+class ListServer {
+  + ListServer (products: List[Products]): None
+  + get_entries (n: int): List[Products]
+  - products_
+}
+
+class MapServer {
+  + MapServer (products: List[Products]): None
+  + get_entries (n: int): List[Products]
+  - products
+}
+
+Server <|-- ListServer
+Server <|-- MapServer
+@enduml
