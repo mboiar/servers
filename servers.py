@@ -8,11 +8,11 @@ class Product:
     def __init__(self, name: str, price: float) -> None:
         # Check the types
         if not (isinstance(name, str) and isinstance(price, float)):
-            ValueError("The name or price is wrong type!")
+            raise ValueError("The name or price is wrong type!")
         elif not re.findall(r'^[A-Za-z]+\d+$', name):
-            ValueError("The name have bad pattern!")
+            raise ValueError("The name have bad pattern!")
         elif price <= 0:
-            ValueError("The price is bad!")
+            raise ValueError("The price is bad!")
         else:
             self.name = name
             self.price = price
