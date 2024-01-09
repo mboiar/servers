@@ -78,10 +78,22 @@ class MapServer(Server):
     def get_entries_(self, n_letters: int) -> [Product]:
         return [p[1] for p in self.products_.items() if self.match_product_name(p[0], n_letters)]
 
-    
+
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
     
-    def get_total_price(self, n_letters: Optional[int]) -> Optional[float]:
-        raise NotImplementedError()
+    def __init__(self, server: Server):
+        self.server = server
 
+    def get_total_price(self, n_letters: Optional[int]) -> Optional[float]:
+        sum = 0
+        try:
+            entries: list = self.server.get_entries(n_letters)
+            if not entries:
+                raise Exception("a list is empty")
+            for e in entries:
+                sum += e.price
+        except:
+            return None
+        else:
+            return sum
