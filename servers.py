@@ -59,7 +59,7 @@ class Server(ABC):
     def match_product_name(self, product: Product, n_letters: int) -> Union[re.Match, None]:
         return re.fullmatch(f'^[a-zA-Z]{{{n_letters}}}\\d{{2,3}}$', product.name)
     
-    def has_too_many_products(self, entries: List[Product]) -> bool:
+    def has_too_many_products(entries: List[Product]) -> bool:
         return len(entries) > Server.n_max_returned_entries
  
 
@@ -68,7 +68,7 @@ class ListServer(Server):
         self.products_ = products
 
     def get_entries_(self, n_letters: int) -> List[Product]:
-        return [p for p in self.products_ if self.match_product_name(p.name, n_letters)]
+        return [p for p in self.products_ if self.match_product_name(p, n_letters)]
     
     
 class MapServer(Server):
@@ -76,7 +76,7 @@ class MapServer(Server):
         self.products_ = {p.name:p for p in products}
 
     def get_entries_(self, n_letters: int) -> [Product]:
-        return [p[1] for p in self.products_.items() if self.match_product_name(p[0], n_letters)]
+        return [p[1] for p in self.products_.items() if self.match_product_name(p[1], n_letters)]
 
 
 class Client:
