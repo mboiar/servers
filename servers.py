@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
     
-from typing import Optional, List, Union, Self
+from typing import Optional, List, Union, TypeVar
 import re
 
 from abc import abstractmethod, ABC
 
-    
+
 class Product:
     def __init__(self, name: str, price: Union[float, int]) -> None:
         # Check the types
@@ -20,7 +20,7 @@ class Product:
             self.name = name
             self.price = price
 
-    def __eq__(self, other: Self):
+    def __eq__(self, other: "Product"):
         return self.__hash__() == other.__hash__()
 
     def __hash__(self):
@@ -56,12 +56,17 @@ class Server(ABC):
         else:
             return sorted(entries, key=lambda p: p.price)
     
-    def match_product_name(self, product: Product, n_letters: int) -> Union[re.Match, None]:
+    @staticmethod
+    def match_product_name(product: Product, n_letters: int) -> Union[re.Match, None]:
         return re.fullmatch(f'^[a-zA-Z]{{{n_letters}}}\\d{{2,3}}$', product.name)
-    
+
+    @staticmethod
     def has_too_many_products(entries: List[Product]) -> bool:
         return len(entries) > Server.n_max_returned_entries
- 
+
+
+ServerType = TypeVar("ServerType", bound=Server)
+
 
 class ListServer(Server):
     def __init__(self, products: List[Product]) -> None:
@@ -82,18 +87,18 @@ class MapServer(Server):
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
     
-    def __init__(self, server: Server):
+    def __init__(self, server: ServerType):
         self.server = server
 
     def get_total_price(self, n_letters: Optional[int]) -> Optional[float]:
-        sum = 0
+        sum_ = 0
         try:
-            entries: list = self.server.get_entries(n_letters)
+            entries = self.server.get_entries(n_letters)
             if not entries:
                 raise Exception("a list is empty")
             for e in entries:
-                sum += e.price
+                sum_ += e.price
         except:
             return None
         else:
-            return sum
+            return sum_
