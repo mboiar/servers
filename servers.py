@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-    
+
 from typing import Optional, List, Union, TypeVar
 import re
 
@@ -14,8 +14,6 @@ class Product:
             raise ValueError("The name or price is wrong type!")
         elif not re.findall(r'^[A-Za-z]+\d+$', name):
             raise ValueError("The name have bad pattern!")
-        elif price < 0:
-            raise ValueError("The price is bad!")
         else:
             self.name = name
             self.price = price
@@ -28,14 +26,14 @@ class Product:
 
 
 class ServerError(Exception):
-    pass  
+    pass
 
 
 class TooManyProductsFoundError(ServerError):
     # Reprezentuje wyjątek związany ze znalezieniem zbyt dużej liczby produktów.
     pass
-    
-    
+
+
 class Server(ABC):
     n_max_returned_entries = 3
 
@@ -46,7 +44,7 @@ class Server(ABC):
     @abstractmethod
     def get_entries_(self, n_letters: int) -> List[Product]:
         raise NotImplementedError
-    
+
     def get_entries(self, n_letters: int) -> List[Product]:
         entries = self.get_entries_(n_letters)
         if entries is None:
@@ -55,7 +53,7 @@ class Server(ABC):
             raise TooManyProductsFoundError(f"Liczba znalezionych produktów przekracza maks. wartość: {len(entries)} > {Server.n_max_returned_entries}")
         else:
             return sorted(entries, key=lambda p: p.price)
-    
+
     @staticmethod
     def match_product_name(product: Product, n_letters: int) -> Union[re.Match, None]:
         return re.fullmatch(f'^[a-zA-Z]{{{n_letters}}}\\d{{2,3}}$', product.name)
@@ -74,8 +72,8 @@ class ListServer(Server):
 
     def get_entries_(self, n_letters: int) -> List[Product]:
         return [p for p in self.products if self.match_product_name(p, n_letters)]
-    
-    
+
+
 class MapServer(Server):
     def __init__(self, products: List[Product]) -> None:
         self.products = {p.name:p for p in products}
@@ -86,7 +84,7 @@ class MapServer(Server):
 
 class Client:
     # FIXME: klasa powinna posiadać metodę inicjalizacyjną przyjmującą obiekt reprezentujący serwer
-    
+
     def __init__(self, server: ServerType):
         self.server = server
 
