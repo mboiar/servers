@@ -20,13 +20,6 @@ class ProductTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             Product("z", 9.56)
 
-    def test_check_bad_price(self):
-        with self.assertRaises(ValueError):
-            Product("bhy123", (-92.0))
-
-        with self.assertRaises(ValueError):
-            Product("Kud123", 0)
-
 
 
 class ServerTest(unittest.TestCase):

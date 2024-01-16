@@ -93,10 +93,10 @@ class Client:
         try:
             entries = self.server.get_entries(n_letters)
             if not entries:
-                raise Exception("a list is empty")
+                return None
             for e in entries:
                 sum_ += e.price
-        except:
+        except ServerError:
             return None
         else:
             return sum_
