@@ -14,7 +14,7 @@ class Product:
             raise ValueError("The name or price is wrong type!")
         elif not re.findall(r'^[A-Za-z]+\d+$', name):
             raise ValueError("The name have bad pattern!")
-        elif price <= 0:
+        elif price < 0:
             raise ValueError("The price is bad!")
         else:
             self.name = name
@@ -70,18 +70,18 @@ ServerType = TypeVar("ServerType", bound=Server)
 
 class ListServer(Server):
     def __init__(self, products: List[Product]) -> None:
-        self.products_ = products
+        self.products = products
 
     def get_entries_(self, n_letters: int) -> List[Product]:
-        return [p for p in self.products_ if self.match_product_name(p, n_letters)]
+        return [p for p in self.products if self.match_product_name(p, n_letters)]
     
     
 class MapServer(Server):
     def __init__(self, products: List[Product]) -> None:
-        self.products_ = {p.name:p for p in products}
+        self.products = {p.name:p for p in products}
 
     def get_entries_(self, n_letters: int) -> [Product]:
-        return [p[1] for p in self.products_.items() if self.match_product_name(p[1], n_letters)]
+        return [p[1] for p in self.products.items() if self.match_product_name(p[1], n_letters)]
 
 
 class Client:
